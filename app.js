@@ -1,5 +1,5 @@
 const express = require("express");
-const querystring = require("querystring");
+const querystring = require("querystring"); 
 const port = 3000;
 const app = express();
 
@@ -9,8 +9,8 @@ let messages = [];
 // Track last active times for each sender
 let users = {};
 
-app.use(express.static("./public"));
-app.use(express.json());
+app.use(express.static("./public")); // upload static 
+app.use(express.json()); // 
 
 // generic comparison function for case-insensitive alphabetic sorting on the name field
 function userSortFn(a, b) {
@@ -42,9 +42,10 @@ app.get("/messages", (request, response) => {
 
   // sort the list of users alphabetically by name
   usersSimple.sort(userSortFn);
-  usersSimple.filter(a => a.name !== request.query.for);
+  usersSimple.filter(a => a.name !== request.query.for); // userssikple is array, and a is single user/item in array, and filter finds for true or false
 
   // update the requesting user's last access time
+  // passing the user's name as a query; can't send data in the body with a get requests
   users[request.query.for] = now;
 
   // send the latest 40 messages and the full user list, annotated with active flags
@@ -63,8 +64,10 @@ app.post("/messages", (request, response) => {
   users[request.body.sender] = timestamp;
 
   // Send back the successful response.
+  // 201 = Created (in this case created a new message)
   response.status(201);
   response.send(request.body);
 });
 
-app.listen(3000);
+app.listen(port, console.log("Listening on port " + port));
+// my IP = 192.168.250.179
